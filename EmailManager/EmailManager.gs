@@ -5,14 +5,13 @@ Licensed under the MIT License
 
 class EmailManager {
   /**
-  * Enviar correo
-  * @param {Object} config Configuration object
-  * @param {string} config.name Nombre del remitente
-  * @param {string} config.cc Copy
-  * @param {string} config.bcc Blind copy
-  * @param {boolean} config.noReply True to no replay
-  * @param {string} config.replyTo Adress to replay
-  * @return {date} Date on sucess
+  * Send mail manager
+  * @param {object} [config] config object
+  * @param {string} [config.name] name from default
+  * @param {string} [config.cc] cc email default
+  * @param {string} [config.bcc] bcc email default
+  * @param {boolean} [config.noReply] true to no replay default
+  * @param {string} [config.replyTo] replay email default
   */
   constructor({
     name,
@@ -29,22 +28,22 @@ class EmailManager {
   }
 
   /**
-  * Enviar correo
+  * Send mail method
   * @param {string} htmlFileName Name of HTML template
-  * @param {Object} remplazo Object with data to remplace
-  * @param {Object} emailObject Email data
-  * @param {string} emailObject.name Nombre del remitente
-  * @param {string} emailObject.cc Copy
-  * @param {string} emailObject.bcc Blink copy
+  * @param {object} replace Object with data to replace
+  * @param {object} emailObject email data
+  * @param {string} emailObject.name name from
+  * @param {string} emailObject.cc cc email
+  * @param {string} emailObject.bcc bcc email
   * @param {boolean} emailObject.noReply True to no replay
-  * @param {string} emailObject.replyTo Adress to replay
+  * @param {string} emailObject.replyTo replay email
   * @param {string} emailObject.subject Email subject
-  * @param {string} emailObject.to Destinatario
+  * @param {string} emailObject.to email
   * @param {array} emailObject.attachments Array of attachments
-  * @return {date} Date on sucess
+  * @return {date} Date on success
   */
   sendEmailHtml(
-    htmlFileName, remplazo,
+    htmlFileName, replace,
     { name = this.name_,
       cc = this.cc_,
       bcc = this.bcc_,
@@ -53,15 +52,14 @@ class EmailManager {
       subject,
       to,
       attachments = [] }) {
-
     let html = HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();
-    html = this.replaceString_(html, remplazo);
+    html = this.replaceString_(html, replace);
 
     try {
       MailApp.sendEmail({
         name: name,
         subject: subject ? subject : '',
-        to: to ? to : bcc,
+        to: to ? to : '',
         cc: cc ? cc : '',
         bcc: bcc,
         htmlBody: html,
@@ -76,18 +74,17 @@ class EmailManager {
   }
 
   /**
-  * Remplazar String
-  * @param {string} str Intrada del html
-  * @param {Object} remplazo Objeto con key lo que se va a remplazar, y dato por lo que se remplazará
-  * @return {string} Regresa el string con remplazo
+  * Replaces a string
+  * @param {string} str input string
+  * @param {Object} replace object with replaces
+  * @return {string} replaced string
   */
-  replaceString_(str, remplazo) {
+  replaceString_(str, replace) {
     if (typeof str !== 'string') return undefined;
-    if (typeof remplazo === 'undefined') return str;
-
+    if (typeof replace === 'undefined') return str;
     let newStr = str;
 
-    Object.keys(remplazo).forEach(key => newStr = newStr.replace(new RegExp(key, "g"), remplazo[key]));
+    Object.keys(replace).forEach(key => newStr = newStr.replace(new RegExp(key, "g"), replace[key]));
 
     return newStr;
   }

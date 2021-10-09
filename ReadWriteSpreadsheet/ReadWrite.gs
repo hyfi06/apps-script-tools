@@ -33,7 +33,7 @@ function toANotation (num) {
     k: 'U', l: 'V', m: 'W', n: 'X', o: 'Y',
     p: 'Z',
   };
-  
+
   if (num < BASE) {
     return CONVERT_TABLE[num.toString(BASE)];
   }
@@ -46,44 +46,53 @@ function toANotation (num) {
 
 /**
  * Read a sheet form a Spreadsheet
+ * @requires toANotation, isNumber
  * @param {string} url The URL for the spreadsheet
  * @param {string} sheetName Name of sheet
  * @param {number} [rowInit=2] number of initial row
  * @param {Object} [config={}] configuration
+ * @param {Object} [config.model=undefined] Object with Column letter as key and property as value.
+ * @param {function} [config.class=class Default{}] Class or constructor
+ * @param {function} [config.filter=(value,index,array)=>value] Filter function
+ * @param {boolean} [config.oneRow=false] If it is true return only the rowInit.
  * @return {Object[]}
  */
 function read(url, sheetName, rowInit = 2, config = {}) {
   if (!url || !sheetName || !isNumber(rowInit)) return [];
   const sheet = SpreadsheetApp.openByUrl(url).getSheetByName(sheetName);
   if (sheet.getLastRow() < rowInit) return [];
-  const range = sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn());
-  
-  let values = range.getValues().filter(function (row, i) { return i + 1 >= rowInit });
-  
-  values = values.map(function (row, i) {
-    return row.reduce(function(acum, curr, idx) {
-      const letter = toANotation(idx);
-      if (config.model) {
-        if(config.model[letter]) {
-          acum[config.model[letter]] = curr;
+  const range = sheet.getRange(
+    rowInit, 1,
+    config.oneRow ? 1 : sheet.getLastRow() - rowInit + 1, sheet.getLastColumn()
+  );
+
+  let values = range.getValues()
+    .map(function (row, i) {
+      return row.reduce(function (acum, curr, idx) {
+        const letter = toANotation(idx);
+        if (config.model) {
+          if (config.model[letter]) {
+            acum[config.model[letter]] = curr;
+          } else if (config.model[letter.toLowerCase()]) {
+            acum[config.model[letter.toLowerCase()]] = curr;
+          }
+        } else {
+          acum[letter] = curr;
         }
-      } else {
-        acum[letter] = curr;        
-      }
-      return acum;
-    }, {rowIdx: i + rowInit});
-  });
+        return acum;
+      }, { rowIdx: i + rowInit });
+    });
 
   if (config.class) {
-    values = values.map(function(row, i){
+    values = values.map(function (row, i) {
       return new config.class(row);
     });
   }
-  
+
   if (config.filter) {
     try {
       values = values.filter(config.filter);
-    } catch(e) {
+    } catch (e) {
       console.log(e);
       return [];
     }
@@ -100,13 +109,13 @@ function read(url, sheetName, rowInit = 2, config = {}) {
  * @param {number} [rowInit=-1] number of initial row
  * @return 
  */
-function write(url, sheetName, data={}, row=-1) {
+function write(url, sheetName, data = {}, row = -1) {
   if (!url || !sheetName || !isNumber(row)) return;
   const sheet = SpreadsheetApp.openByUrl(url).getSheetByName(sheetName);
-  if(row == -1) row = sheet.getLastRow()+1;
-  Object.keys(data).forEach(function(colum){
-    if (!/[A-Z]+/.test(colum)) return;
-    sheet.getRange(`${colum}${row}`).setValue(data[colum]);
+  if (row == -1) row = sheet.getLastRow() + 1;
+  Object.keys(data).forEach(function (colum) {
+    if (!/[A-Z]+/.test(colum.toUpperCase())) return;
+    sheet.getRange(`${colum.toUpperCase()}${row}`).setValue(data[colum]);
   });
 }
 

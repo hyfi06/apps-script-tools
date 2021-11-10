@@ -28,8 +28,25 @@ toANotation(5) // return 'F'
 #### Parameters
 | Name | Type | Description |
 | - | - | - |
-| number | `Number` | column number starting at zero |
+| number | `Integer` | column number starting at zero |
 
 #### Returns
 
 `String` - the column letter. 
+
+---
+
+### read(url, sheetname, startRow, config)
+
+Return a array of row objects, for default the keys are the letter column with and `rowIdx` key with row index as value.
+
+```js
+
+```
+
+
+With `model` key in `config` object, you can rename the keys of row objct.
+
+
+
+

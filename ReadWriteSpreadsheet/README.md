@@ -41,12 +41,29 @@ toANotation(5) // return 'F'
 Return a array of row objects, for default the keys are the letter column with and `rowIdx` key with row index as value.
 
 ```js
+var sheet = SpreadsheetApp.getActiveSpreadsheet();
 
+var rows = read(sheet.getUrl(), sheet.getName(), 2);
+
+console.log(Object.keys(rows)); // { 'rowIdx', 'A', 'B', ... }
 ```
 
 
-With `model` key in `config` object, you can rename the keys of row objct.
+With `model` key in `config` object, you can rename the keys of row object. The value of model most be a object such that key name is the column letter and value is the new key name. If a column letter is omitted, this column will be omitted.
 
+```js
+var sheet = SpreadsheetApp.getActiveSpreadsheet();
+
+var rows = read(sheet.getUrl(), sheet.getName(), 2, {
+	model: {
+		'A': 'id',
+		'B': 'name',
+	}});
+
+
+console.log(Object.keys(rows)); // { 'rowIdx', 'id', 'name' }
+
+```
 
 
 

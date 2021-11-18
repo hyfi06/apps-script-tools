@@ -45,11 +45,12 @@ var sheet = SpreadsheetApp.getActiveSpreadsheet();
 
 var rows = read(sheet.getUrl(), sheet.getName(), 2);
 
-console.log(Object.keys(rows)); // { 'rowIdx', 'A', 'B', ... }
+console.log(Object.keys(rows[0])); // { 'rowIdx', 'A', 'B', ... }
 ```
 
 
-With `model` key in `config` object, you can rename the keys of row object. The value of model most be a object such that key name is the column letter and value is the new key name. If a column letter is omitted, this column will be omitted.
+With `model` key in `config` object, you can rename the keys of row object. The value of model most be a object such that key name is the column letter and value is the new key name. The row object only will have the rename keys and `rowIdx` key.
+
 
 ```js
 var sheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -61,9 +62,80 @@ var rows = read(sheet.getUrl(), sheet.getName(), 2, {
 	}});
 
 
-console.log(Object.keys(rows)); // { 'rowIdx', 'id', 'name' }
+console.log(Object.keys(rows[0])); // { 'rowIdx', 'id', 'name' }
 
 ```
+
+
+The value of `class` key, in `config` object, most be a constructor function or class. When this key is include, the function `read` return a array of instances of the class.In this case, the instances don't have the `rowIdx` key for default.
+
+The constructor function most have one parameter. This parameter have the row data with keys default (column letter) or renamed keys with `model` key.
+
+
+```js
+var sheet = SpreadsheetApp.getActiveSpreadsheet();
+
+function Person (row){
+	this.rowIdx = row.rowIdx;
+	this.id = row.A;
+	this.name = row.B;
+
+	this.sayHello = function () {
+		return `Hi! I'am ${this.name}`;
+	}
+}
+
+var rows = read(sheet.getUrl(), sheet.getName(), 2, {
+	class: Person,
+});
+
+
+console.log(Object.keys(rows[0])); // { 'rowIdx', 'id', 'name', 'sayHello' }
+```
+
+```js
+var sheet = SpreadsheetApp.getActiveSpreadsheet();
+
+var model = {
+	'A': 'id',
+	'B': 'name',
+};
+
+function Person (row){
+	this.rowIdx = row.rowIdx;
+	this.id = row.id;
+	this.name = row.name;
+
+	this.sayHello = function () {
+		return `Hi! I'am ${this.name}`;
+	}
+}
+
+var rows = read(sheet.getUrl(), sheet.getName(), 2, {
+	model: model,
+	class: Person,
+});
+
+
+console.log(Object.keys(rows[0])); // { 'rowIdx', 'id', 'name', 'sayHello' }
+```
+
+The `oneRow` key of `config` object accept a boolean value. It is `false` for default. When it is true, `read` function return a array of lenght 1 with start row values.
+
+It's helpful when you use events and only need the trigger row.
+
+```js
+var sheet = SpreadsheetApp.getActiveSpreadsheet();
+var rows = read(sheet.getUrl(), sheet.getName(), 2, {
+	oneRow: true,
+});
+
+console.log(row.lenght) // 1
+```
+
+The `filter` key of `config` object accept a callback function. Uses filter on result array is same a use `filter` option.
+
+
 
 
 

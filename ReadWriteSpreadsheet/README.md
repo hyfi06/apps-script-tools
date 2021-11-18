@@ -120,7 +120,7 @@ var rows = read(sheet.getUrl(), sheet.getName(), 2, {
 console.log(Object.keys(rows[0])); // { 'rowIdx', 'id', 'name', 'sayHello' }
 ```
 
-The `oneRow` key of `config` object accept a boolean value. It is `false` for default. When it is true, `read` function return a array of lenght 1 with start row values.
+The `oneRow` key of `config` object accept a boolean value. It is `false` for default. When it is true, `read` function return a array of length 1 with start row values.
 
 It's helpful when you use events and only need the trigger row.
 
@@ -130,11 +130,49 @@ var rows = read(sheet.getUrl(), sheet.getName(), 2, {
 	oneRow: true,
 });
 
-console.log(row.lenght) // 1
+console.log(rows.length) // 1
 ```
 
 The `filter` key of `config` object accept a callback function. Uses filter on result array is same a use `filter` option.
 
+```js
+var sheet = SpreadsheetApp.getActiveSpreadsheet();
+
+function callback (value, index, array) {
+	return index % 2 == 0;
+}
+
+var evenRows = read(sheet.getUrl(), sheet.getName(), 2, {
+	filter: callback,
+});
+
+var rows = read(sheet.getUrl(), sheet.getName(), 2);
+
+var filteredRows = rows.filter(callback());
+
+console.log(evenRows);
+console.log(filteredRows);
+
+// evenRows is the same as filteredRows
+```
+
+
+#### Parameters
+| Name | Type | Description |
+| - | - | - |
+| url | `String` | Spreadsheet url |
+| sheetname | `String` | Sheet name |
+| startRow | `Integer` | Row number from which it will be read |
+| config.model | `Object` | Object with key as column letters, values as new key name |
+| config.class | `function` or `class` | Constructor function or class |
+| config.oneRow | `Boolean` | If it is `true`, return a array of length one. Default is `false` |
+| config.filter | `function` | Callback function for filter. Most return a boolean value |
+
+#### Returns
+
+`Object[]` - array with row values as a object.
+
+---
 
 
 

@@ -9,7 +9,7 @@
 | isNumber | `boolean` | Return true if a object is a number. |
 | toANotation | `string` | Return column letter. For example, 0 return A, 1 return B. |
 | read | `Object[]` | Return a array of objects with values of a sheet. |
-| write | `void` | Write data in a sheet. |
+| write | `void` | Write data on a sheet. |
 
 ---
 
@@ -41,9 +41,10 @@ toANotation(5) // return 'F'
 Return a array of row objects, for default the keys are the letter column with and `rowIdx` key with row index as value.
 
 ```js
-var sheet = SpreadsheetApp.getActiveSpreadsheet();
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
 
-var rows = read(sheet.getUrl(), sheet.getName(), 2);
+var rows = read(spreadsheet.getUrl(), sheet.getName(), 2);
 
 console.log(Object.keys(rows[0])); // { 'rowIdx', 'A', 'B', ... }
 ```
@@ -53,9 +54,11 @@ With `model` key in `config` object, you can rename the keys of row object. The 
 
 
 ```js
-var sheet = SpreadsheetApp.getActiveSpreadsheet();
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
 
-var rows = read(sheet.getUrl(), sheet.getName(), 2, {
+
+var rows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
 	model: {
 		'A': 'id',
 		'B': 'name',
@@ -73,7 +76,8 @@ The constructor function most have one parameter. This parameter have the row da
 
 
 ```js
-var sheet = SpreadsheetApp.getActiveSpreadsheet();
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
 
 function Person (row){
 	this.rowIdx = row.rowIdx;
@@ -85,7 +89,7 @@ function Person (row){
 	}
 }
 
-var rows = read(sheet.getUrl(), sheet.getName(), 2, {
+var rows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
 	class: Person,
 });
 
@@ -94,7 +98,9 @@ console.log(Object.keys(rows[0])); // { 'rowIdx', 'id', 'name', 'sayHello' }
 ```
 
 ```js
-var sheet = SpreadsheetApp.getActiveSpreadsheet();
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
+
 
 var model = {
 	'A': 'id',
@@ -111,7 +117,7 @@ function Person (row){
 	}
 }
 
-var rows = read(sheet.getUrl(), sheet.getName(), 2, {
+var rows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
 	model: model,
 	class: Person,
 });
@@ -125,8 +131,10 @@ The `oneRow` key of `config` object accept a boolean value. It is `false` for de
 It's helpful when you use events and only need the trigger row.
 
 ```js
-var sheet = SpreadsheetApp.getActiveSpreadsheet();
-var rows = read(sheet.getUrl(), sheet.getName(), 2, {
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
+
+var rows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
 	oneRow: true,
 });
 
@@ -136,17 +144,18 @@ console.log(rows.length) // 1
 The `filter` key of `config` object accept a callback function. Uses filter on result array is same a use `filter` option.
 
 ```js
-var sheet = SpreadsheetApp.getActiveSpreadsheet();
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
 
 function callback (value, index, array) {
 	return index % 2 == 0;
 }
 
-var evenRows = read(sheet.getUrl(), sheet.getName(), 2, {
+var evenRows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
 	filter: callback,
 });
 
-var rows = read(sheet.getUrl(), sheet.getName(), 2);
+var rows = read(spreadsheet.getUrl(), sheet.getName(), 2);
 
 var filteredRows = rows.filter(callback());
 
@@ -174,6 +183,34 @@ console.log(filteredRows);
 
 ---
 
+### write(url, sheetname, data, rowIndex)
 
+Write data on a sheet. The paramater `data` is a object with keys as column letter.
+
+If `rowIndex` is equal `-1` or it is omitted, the function write on a new row under of the last row.
+
+
+
+```js
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
+
+write(spreadsheet.getUrl(), sheet.getName(), {
+	'A': 1,
+	'B': 'Jane Doe',
+});
+
+```
+
+#### Parameters
+| Name | Type | Description |
+| - | - | - |
+| url | `String` | Spreadsheet url |
+| sheetname | `String` | Sheet name |
+| rowIndex | `Integer` | row number |
+
+#### Returns
+
+`String` - the column letter. 
 
 

@@ -10,9 +10,10 @@
 | write       | `void`      | Write data on a sheet.                                     |
 
 ---
+
 ### isNumber(number)
 
-See  [Jon Schlinkert repository](https://github.com/jonschlinkert/is-number).
+See [Jon Schlinkert repository](https://github.com/jonschlinkert/is-number).
 
 ---
 
@@ -23,6 +24,7 @@ Given a column number (starting at zero), return a column letter. This function 
 ```js
 toANotation(0); // return 'A'
 toANotation(5); // return 'F'
+toANotation(75); // return 'BX'
 ```
 
 #### Parameters
@@ -47,7 +49,7 @@ var sheet = spreadsheet.getActiveSheet();
 
 var rows = read(spreadsheet.getUrl(), sheet.getName(), 2);
 
-console.log(Object.keys(rows[0])); // { 'rowIdx', 'A', 'B', ... }
+console.log(Object.keys(rows[0])); // [ 'rowIdx', 'A', 'B' ]
 ```
 
 With `model` key in `config` object, you can rename the keys of row object. The value of model most be a object such that key name is the column letter and value is the new key name. The row object only will have the rename keys and `rowIdx` key.
@@ -58,12 +60,12 @@ var sheet = spreadsheet.getActiveSheet();
 
 var rows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
   model: {
-    A: "id",
-    B: "name",
+    A: 'id',
+    B: 'name',
   },
 });
 
-console.log(Object.keys(rows[0])); // { 'rowIdx', 'id', 'name' }
+console.log(Object.keys(rows[0])); // [ 'rowIdx', 'id', 'name' ]
 ```
 
 The value of `class` key, in `config` object, most be a constructor function or class. When this key is include, the function `read` return a array of instances of the class. In this case, the instances don't have the `rowIdx` key for default.
@@ -88,7 +90,7 @@ var rows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
   class: Person,
 });
 
-console.log(Object.keys(rows[0])); // { 'rowIdx', 'id', 'name', 'sayHello' }
+console.log(Object.keys(rows[0])); // [ 'rowIdx', 'id', 'name', 'sayHello' ]
 ```
 
 ```js
@@ -96,8 +98,8 @@ var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 var sheet = spreadsheet.getActiveSheet();
 
 var model = {
-  A: "id",
-  B: "name",
+  A: 'id',
+  B: 'name',
 };
 
 function Person(row) {
@@ -115,7 +117,7 @@ var rows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
   class: Person,
 });
 
-console.log(Object.keys(rows[0])); // { 'rowIdx', 'id', 'name', 'sayHello' }
+console.log(Object.keys(rows[0])); // [ 'rowIdx', 'id', 'name', 'sayHello' ]
 ```
 
 The `oneRow` key of `config` object accept a boolean value. It is `false` for default. When it is true, `read` function return a array of length 1 with start row values.
@@ -149,7 +151,7 @@ var evenRows = read(spreadsheet.getUrl(), sheet.getName(), 2, {
 
 var rows = read(spreadsheet.getUrl(), sheet.getName(), 2);
 
-var filteredRows = rows.filter(callback());
+var filteredRows = rows.filter(callback);
 
 console.log(evenRows);
 console.log(filteredRows);
@@ -186,8 +188,8 @@ var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 var sheet = spreadsheet.getActiveSheet();
 
 write(spreadsheet.getUrl(), sheet.getName(), {
-  A: 1,
-  B: "Jane Doe",
+  A: 2,
+  B: 'Jane Doe',
 });
 ```
 

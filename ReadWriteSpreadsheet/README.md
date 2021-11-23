@@ -2,12 +2,12 @@
 
 ## Functions
 
-| Function    | Return type | Brief description                                          |
-| ----------- | ----------- | ---------------------------------------------------------- |
-| isNumber    | `boolean`   | Return true if a object is a number.                       |
-| toANotation | `string`    | Return column letter. For example, 0 return A, 1 return B. |
-| read        | `Object[]`  | Return a array of objects with values of a sheet.          |
-| write       | `void`      | Write data on a sheet.                                     |
+| Function                                   | Return type | Brief description                                          |
+| ------------------------------------------ | ----------- | ---------------------------------------------------------- |
+| [isNumber](#isnumbernumber)                | `boolean`   | Return true if a object is a number.                       |
+| [toANotation](#toanotationnumber)          | `string`    | Return column letter. For example, 0 return A, 1 return B. |
+| [read](#readurl-sheetname-startrow-config) | `Object[]`  | Return a array of objects with values of a sheet.          |
+| [write](#writeurl-sheetname-data-rowindex) | `void`      | Write data on a sheet.                                     |
 
 ---
 

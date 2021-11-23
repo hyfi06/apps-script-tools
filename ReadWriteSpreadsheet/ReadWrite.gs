@@ -1,29 +1,29 @@
 /* 
-Copyright (c) 2020 Héctor Olvera Vital
+Copyright (c) 2020-2021 Héctor Olvera Vital
 Licensed under the MIT License
 */
 
 /**
  * @copyright 2014-present, Jon Schlinkert.
- * @param {object} data to test
+ * @param {object} number data to test
  * @return {boolean} true if it is a number
  */
-function isNumber(num) {
-  if (typeof num === 'number') {
-    return num - num === 0;
+function isNumber(number) {
+  if (typeof number === 'number') {
+    return number - number === 0;
   }
-  if (typeof num === 'string' && num.trim() !== '') {
-    return Number.isFinite ? Number.isFinite(+num) : isFinite(+num);
+  if (typeof number === 'string' && number.trim() !== '') {
+    return Number.isFinite ? Number.isFinite(+number) : isFinite(+number);
   }
   return false;
 }
 
 /**
  * Convert a number to letter of column. 0 -> A, 1 -> B
- * @param {number} num
+ * @param {number} number
  * @return {string} column letter
  */
-function toANotation (num) {
+function toANotation (number) {
   const BASE = 26;
   const CONVERT_TABLE = {
     0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E',
@@ -34,11 +34,11 @@ function toANotation (num) {
     p: 'Z',
   };
 
-  if (num < BASE) {
-    return CONVERT_TABLE[num.toString(BASE)];
+  if (number < BASE) {
+    return CONVERT_TABLE[number.toString(BASE)];
   }
-  const division = Math.floor(num / BASE);
-  const residue = num % BASE;
+  const division = Math.floor(number / BASE);
+  const residue = number % BASE;
   let columnLetter = toANotation(division - 1);
   columnLetter += CONVERT_TABLE[residue.toString(BASE)];
   return columnLetter;
@@ -49,21 +49,21 @@ function toANotation (num) {
  * @requires toANotation, isNumber
  * @param {string} url The URL for the spreadsheet
  * @param {string} sheetName Name of sheet
- * @param {number} [rowInit=2] number of initial row
+ * @param {number} [startRow=2] number of initial row
  * @param {Object} [config={}] configuration
  * @param {Object} [config.model=undefined] Object with Column letter as key and property as value.
  * @param {function} [config.class=class Default{}] Class or constructor
  * @param {function} [config.filter=(value,index,array)=>value] Filter function
- * @param {boolean} [config.oneRow=false] If it is true return only the rowInit.
+ * @param {boolean} [config.oneRow=false] If it is true return only the start row.
  * @return {Object[]}
  */
-function read(url, sheetName, rowInit = 2, config = {}) {
-  if (!url || !sheetName || !isNumber(rowInit)) return [];
+function read(url, sheetName, startRow = 2, config = {}) {
+  if (!url || !sheetName || !isNumber(startRow)) return [];
   const sheet = SpreadsheetApp.openByUrl(url).getSheetByName(sheetName);
-  if (sheet.getLastRow() < rowInit) return [];
+  if (sheet.getLastRow() < startRow) return [];
   const range = sheet.getRange(
-    rowInit, 1,
-    config.oneRow ? 1 : sheet.getLastRow() - rowInit + 1, sheet.getLastColumn()
+    startRow, 1,
+    config.oneRow ? 1 : sheet.getLastRow() - startRow + 1, sheet.getLastColumn()
   );
 
   let values = range.getValues()
@@ -80,7 +80,7 @@ function read(url, sheetName, rowInit = 2, config = {}) {
           acum[letter] = curr;
         }
         return acum;
-      }, { rowIdx: i + rowInit });
+      }, { rowIdx: i + startRow });
     });
 
   if (config.class) {
@@ -106,7 +106,7 @@ function read(url, sheetName, rowInit = 2, config = {}) {
  * @param {string} url The URL for the spreadsheet
  * @param {string} sheetName Name of sheet
  * @param {Object} [data={}] Object with colum and value,
- * @param {number} [rowInit=-1] number of initial row
+ * @param {number} [row=-1] number of initial row
  * @return 
  */
 function write(url, sheetName, data = {}, row = -1) {

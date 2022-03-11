@@ -6,8 +6,8 @@
 | -------- | ----------- | ----------------- |
 | [isNumber](#isnumbernumber) | `boolean` | Return true if a object is a number. |
 | [zeroFiller](#zerofillernum-len) | `string` | Return a number as string with the minimal length given and fill whit leading zeros. |
-| [strftime](#strftimeformat-locales-directives) | `string` | Return |
-| [timestamp](#timestampformat-date) | `void` | Write data on a sheet. |
+| [strftime](#strftimeformat-locales-directives) | `string` | Return datetime as string with the given format and locale identifier. |
+| [timestamp](#timestampformat-date) | `string` | Return datetime as string with the given format. |
 
 ---
 

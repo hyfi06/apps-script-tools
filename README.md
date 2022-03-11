@@ -13,12 +13,12 @@ Tools and functions that facilitate everyday tasks in Google Script.
 
 | Function | Brief description|
 | -------- | ---------------- |
-| [toANotation](/ReadWriteSpreadsheet#toanotationnumber) | Convert a number to letter of column. 0 -> A, 1 -> B |
-| [read](/ReadWriteSpreadsheet#readurl-sheetname-startrow-config) | Read a sheet form a Spreadsheet |
-| [write](/ReadWriteSpreadsheet#writeurl-sheetname-data-rowindex) | Write data on a Spreadsheet |
-| [zeroFiller](/strftime#zerofillernum-len) | `string` | Return a number as string with the minimal length given and fill whit leading zeros. |
-| [strftime](/strftime#strftimeformat-locales-directives) | `string` | Return |
-| [timestamp](/strftime#timestampformat-date) | `void` | Write data on a sheet. |
+| [toANotation](/ReadWriteSpreadsheet#toanotationnumber) | Convert a number to letter of column. 0 -> A, 1 -> B. |
+| [read](/ReadWriteSpreadsheet#readurl-sheetname-startrow-config) | Read a sheet form a Spreadsheet. |
+| [write](/ReadWriteSpreadsheet#writeurl-sheetname-data-rowindex) | Write data on a Spreadsheet. |
+| [zeroFiller](/strftime#zerofillernum-len) | Return a number as string with the minimal length given and fill whit leading zeros. |
+| [strftime](/strftime#strftimeformat-locales-directives) | Return datetime as string with the given format and locale identifier. |
+| [timestamp](/strftime#timestampformat-date) | Return datetime as string with the given format. |
 
 ## License
 
